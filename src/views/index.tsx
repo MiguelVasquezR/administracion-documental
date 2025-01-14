@@ -38,7 +38,7 @@ const Index = ({ children, usuario, setUser }: IndexProps) => {
 
 const mapStateToProps = (state: IGlobal) => {
   return {
-    usuario: state.usuario,
+    usuario: state.user.usuario,
   };
 };
 
