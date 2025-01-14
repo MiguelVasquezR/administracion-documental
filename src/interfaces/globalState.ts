@@ -12,8 +12,12 @@ interface IStatePrestamos {
   prestamos: IPrestamo[];
 }
 
-export interface IGlobal {
+interface IStateUser {
   usuario: IUsuario;
+}
+
+export interface IGlobal {
+  user: IStateUser;
   movies: IStateMovies;
   books: IStateBooks;
   prestamos: IStatePrestamos;

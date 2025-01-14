@@ -11,10 +11,10 @@ import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import Location from "@/component/Location/Location";
 import clsx from "clsx";
-import { Dispatch } from "@reduxjs/toolkit";
 import { IBook } from "@/interfaces/interfacesBooks";
 import { setBooks } from "@/redux/books";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
 
 interface IAgregarTextoProps {
   setBooks: (movies: IBook[]) => void;
@@ -277,4 +277,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
   };
 };
 
-export default connect(mapDispatchToProps)(AgregarTexto);
+export default connect(null, mapDispatchToProps)(AgregarTexto);

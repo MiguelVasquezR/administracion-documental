@@ -112,7 +112,7 @@ const Index = ({ movies, setPeliculas }: IIndexProps) => {
           </div>
 
           <br />
-          <table className="table-auto border-collapse border border-gray-400 w-full">
+          <table className="table-auto border-collapse border border-gray-400 w-full max-h-[700px] overflow-auto">
             <thead>
               <tr>
                 <th className="border border-gray-400 px-4 py-2">Titulo</th>

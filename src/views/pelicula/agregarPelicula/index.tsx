@@ -175,9 +175,9 @@ const AgregarPelicula = ({ setMovies }: IAgregarTextoProps) => {
 
           <div className="flex flex-row justify-between items-center gap-5 w-full">
             <TextField
-              label="Direción"
+              label="Duración"
               errors={!!errors.titulo}
-              placeholder="Direción"
+              placeholder="Duración"
               value={watch("duracion")}
               type={"text"}
               isLabel={false}
@@ -272,4 +272,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
   };
 };
 
-export default connect(mapDispatchToProps)(AgregarPelicula);
+export default connect(null, mapDispatchToProps)(AgregarPelicula);

@@ -19,12 +19,12 @@ export async function POST(req: Request) {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "letrasespanolas5@gmail.com",
-        pass: "xhrm fiwt mzpz lohj",
+        user: process.env.NEXT_PUBLIC_EMAIL,
+        pass: process.env.NEXT_PUBLIC_PASSWORD,
       },
     });
     const mailOptions = {
-      from: "letrasespanolas5@gmail.com",
+      from: process.env.NEXT_PUBLIC_EMAIL,
       to: correo,
       subject:
         "Notificación de la facultad - Tienes entregas pendientes en documental",

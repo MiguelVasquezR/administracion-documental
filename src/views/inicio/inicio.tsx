@@ -1,6 +1,6 @@
 "use client";
 
-import { IPrestamo } from "@/interfaces/interfacesBooks";
+import { IPrestamo, IUsuario } from "@/interfaces/interfacesBooks";
 import { getFecha } from "../../../app/utils/Utils";
 import ModalPrestamo from "@/views/prestamo";
 import { useEffect, useState } from "react";
@@ -11,13 +11,16 @@ import { Dispatch } from "@reduxjs/toolkit";
 import { setPrestamos } from "@/redux/prestamos";
 import { connect } from "react-redux";
 import clsx from "clsx";
+import { setUsuario } from "@/redux/usuario";
 
 interface IProps {
   prestamos: IPrestamo[];
+  user: IUsuario;
   setPrestamos: (prestamos: IPrestamo[]) => void;
+  setUsuario: (usuario: IUsuario) => void;
 }
 
-const Index = ({ prestamos, setPrestamos }: IProps) => {
+const Index = ({ prestamos, setPrestamos, user }: IProps) => {
   const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
@@ -27,6 +30,13 @@ const Index = ({ prestamos, setPrestamos }: IProps) => {
   }, []);
 
   useEffect(() => {
+    if (!user) {
+      const usuario = JSON.parse(localStorage.getItem("user") || "{}");
+      if (usuario) {
+        setUsuario(usuario);
+      }
+    }
+
     if (prestamos === undefined || prestamos.length < 1) {
       fetch("/api/prestamo", {
         method: "GET",
@@ -76,7 +86,7 @@ const Index = ({ prestamos, setPrestamos }: IProps) => {
     <>
       <div className="flex flex-row items-center justify-between p-4 text-lg font-bold">
         <div>
-          <h2>Hola, Miguel ✋🏻</h2>
+          <h2>Hola, {user.nombre} ✋🏻</h2>
           <p>{getFecha()}</p>
         </div>
         <button
@@ -181,12 +191,14 @@ const Index = ({ prestamos, setPrestamos }: IProps) => {
 const mapStateToProps = (state: IGlobal) => {
   return {
     prestamos: state.prestamos.prestamos || [],
+    user: state.user.usuario || {},
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     setPrestamos: (prestamos: IPrestamo[]) => dispatch(setPrestamos(prestamos)),
+    setUsuario: (usuario: IUsuario) => dispatch(setUsuario(usuario)),
   };
 };
 
