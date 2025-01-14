@@ -10,8 +10,9 @@ import {
   where,
 } from "firebase/firestore";
 import { firestore } from "./app";
+import { FieldValues } from "react-hook-form";
 
-export const writeData = async (collectionName: string, data: any) => {
+export const writeData = async (collectionName: string, data: FieldValues) => {
   try {
     const docRef = await addDoc(collection(firestore, collectionName), data);
     const docId = docRef.id;
@@ -49,7 +50,7 @@ export const deleteData = async (collectionName: string, id: string) => {
 export const updateData = async (
   collectionName: string,
   id: string,
-  data: any
+  data: FieldValues
 ) => {
   try {
     await updateDoc(doc(firestore, collectionName, id), data);

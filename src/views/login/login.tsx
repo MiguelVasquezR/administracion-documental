@@ -3,32 +3,34 @@
 import TextField from "@/component/TextField/TextField";
 import Logo from "../../../public/Logo.png";
 import Image from "next/image";
-import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-const Login = () => {
-  const [user, setUser] = useState({
-    email: "",
-    password: "",
-  });
+import { useForm, FieldValues } from "react-hook-form";
+import { IUsuario } from "@/interfaces/interfacesBooks";
+import { setUsuario } from "@/redux/usuario";
+import { connect } from "react-redux";
+import { Dispatch } from "@reduxjs/toolkit";
+import { IGlobal } from "@/interfaces/globalState";
+
+interface ILoginProps {
+  setUser: (user: IUsuario) => void;
+}
+
+const Login = ({ setUser }: ILoginProps) => {
   const router = useRouter();
+  const { register, watch, handleSubmit } = useForm();
 
-  const onSubmit = (e: any) => {
-    e.preventDefault();
-    if (user.email === "" || user.password === "") {
-      toast.error("Por favor, ingrese un email y contraseña");
-      return;
-    }
-
+  const onSubmit = (e: FieldValues) => {
     fetch("/api/usuarios/login", {
       method: "POST",
-      body: JSON.stringify(user),
+      body: JSON.stringify(e),
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.status === 200) {
+          setUser(data.user);
           localStorage.setItem("autenticado", "true");
-          localStorage.setItem("user", JSON.stringify(data.user.correo));
+          localStorage.setItem("user", JSON.stringify(data.user));
           toast.success(data.message);
           router.push("/inicio");
         } else {
@@ -37,9 +39,6 @@ const Login = () => {
       })
       .catch((err) => {
         console.log(err);
-      })
-      .finally(() => {
-        window.location.reload();
       });
   };
 
@@ -47,31 +46,32 @@ const Login = () => {
     <div className="flex flex-col items-center justify-center h-screen bg-primary">
       <form
         className="flex flex-col justify-center gap-4 bg-white rounded-md p-5 h-[600px] w-[400px]"
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit(onSubmit)}
       >
         <div className="flex justify-center">
           <div className="flex flex-col w-[100px] items-center justify-center bg-primary rounded-md shadow-md">
             <Image src={Logo} alt="Logo" width={100} height={100} />
           </div>
         </div>
+
         <TextField
-          label="Email"
-          placeholder="Email"
-          type="text"
-          value={user.email}
-          onChange={(e) => {
-            setUser({ ...user, email: e });
-          }}
+          label="Correo"
+          placeholder="Correo"
+          value={watch("correo")}
+          type={"text"}
+          isLabel={false}
+          {...register("correo")}
         />
+
         <TextField
-          value={user.password}
           label="Password"
           placeholder="Password"
-          type="password"
-          onChange={(e) => {
-            setUser({ ...user, password: e });
-          }}
+          value={watch("password")}
+          type={"text"}
+          isLabel={false}
+          {...register("password")}
         />
+
         <button type="submit" className="bg-primary text-white p-2 rounded-md">
           Login
         </button>
@@ -80,4 +80,16 @@ const Login = () => {
   );
 };
 
-export default Login;
+const mapStateToProps = (state: IGlobal) => {
+  return {
+    usuario: state.usuario,
+  };
+};
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    setUser: (user: IUsuario) => dispatch(setUsuario(user)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

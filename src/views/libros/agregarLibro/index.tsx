@@ -3,7 +3,7 @@
 import { convertToBase64 } from "@/utils/Utils";
 import { BookValidator } from "@/validator/BookValidator";
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, FieldValues } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import UploadImage from "@/component/UploadImage/UploadImage";
 import TextField from "@/component/TextField/TextField";
@@ -11,8 +11,16 @@ import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import Location from "@/component/Location/Location";
 import clsx from "clsx";
+import { Dispatch } from "@reduxjs/toolkit";
+import { IBook } from "@/interfaces/interfacesBooks";
+import { setBooks } from "@/redux/books";
+import { connect } from "react-redux";
 
-const AgregarTexto = () => {
+interface IAgregarTextoProps {
+  setBooks: (movies: IBook[]) => void;
+}
+
+const AgregarTexto = ({ setBooks }: IAgregarTextoProps) => {
   const [image, setImage] = useState<string>("");
   const [respisaSelected, setRespisaSelected] = useState<string>("2");
   const router = useRouter();
@@ -48,7 +56,7 @@ const AgregarTexto = () => {
       respisa: respisaSelected,
     };
     setValue("ubicacion", ubicacion);
-  }, [selectedCell]);
+  }, [respisaSelected, setValue, selectedCell?.col, selectedCell?.row]);
 
   const handleUpload = async (file: File) => {
     if (!file) return alert("Selecciona una imagen primero");
@@ -71,12 +79,11 @@ const AgregarTexto = () => {
     }
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FieldValues) => {
     data.imagen =
       image ||
       "https://res.cloudinary.com/dvt4vznxn/image/upload/v1736555915/yivyktkgvcjxprwwnwui.png";
-    data.id = params.id || "";
-
+    data.id = Array.isArray(params.id) ? params.id[0] : params.id || "";
     const response = await fetch(
       `/api/libros/${params.id ? "editar" : "agregar"}`,
       {
@@ -91,6 +98,7 @@ const AgregarTexto = () => {
     const dataResponse = await response.json();
     if (dataResponse.status === 200) {
       toast.success(dataResponse.message);
+      setBooks([]);
       router.push("/libros");
     } else {
       toast.error(dataResponse.message);
@@ -116,7 +124,7 @@ const AgregarTexto = () => {
           console.log(error);
         });
     }
-  }, [params.id]);
+  }, [params.id, reset]);
 
   return (
     <div className="grid grid-cols-3 p-5">
@@ -124,7 +132,7 @@ const AgregarTexto = () => {
         <UploadImage
           image={image}
           handleImageCapture={handleUpload}
-          register={register}
+          {...register("imagen")}
         />
       </div>
       <div className="col-span-2">
@@ -134,85 +142,67 @@ const AgregarTexto = () => {
             label="Título"
             errors={!!errors.titulo}
             placeholder="Título"
-            onChange={(value) => {
-              setValue("titulo", value);
-            }}
             value={watch("titulo")}
             type={"text"}
-            register={register("titulo")}
             isLabel={false}
             message={errors?.titulo?.message}
+            {...register("titulo")}
           />
+
           <TextField
             label="Autor"
-            errors={!!errors.autor}
+            errors={!!errors.titulo}
             placeholder="Autor"
-            onChange={(value) => {
-              setValue("autor", value);
-            }}
             value={watch("autor")}
             type={"text"}
-            register={register("autor")}
             isLabel={false}
             message={errors?.autor?.message}
+            {...register("autor")}
           />
 
           <TextField
             label="Editorial"
-            errors={!!errors.editorial}
+            errors={!!errors.titulo}
             placeholder="Editorial"
-            onChange={(value) => {
-              setValue("editorial", value);
-            }}
             value={watch("editorial")}
             type={"text"}
-            register={register("editorial")}
             isLabel={false}
             message={errors?.editorial?.message}
+            {...register("editorial")}
           />
 
           <div className="flex flex-row justify-center items-center gap-5 w-full">
             <TextField
               label="Número de Página"
-              errors={!!errors.numPag}
+              errors={!!errors.titulo}
               placeholder="Número de Página"
-              onChange={(value) => {
-                setValue("numPag", value);
-              }}
               value={watch("numPag")}
-              type={"number"}
-              register={register("numPag")}
+              type={"text"}
               isLabel={false}
               message={errors?.numPag?.message}
+              {...register("numPag")}
             />
 
             <TextField
               label="Año de Publicación"
-              errors={!!errors.anioPublicacion}
+              errors={!!errors.titulo}
               placeholder="Año de Publicación"
-              onChange={(value) => {
-                setValue("anioPublicacion", value);
-              }}
               value={watch("anioPublicacion")}
-              type={"number"}
-              register={register("anioPublicacion")}
+              type={"text"}
               isLabel={false}
               message={errors?.anioPublicacion?.message}
+              {...register("anioPublicacion")}
             />
           </div>
-
           <TextField
             label="Tipo"
-            errors={!!errors.tipo}
+            errors={!!errors.titulo}
             placeholder="Tipo"
-            onChange={(value) => {
-              setValue("tipo", value);
-            }}
             value={watch("tipo")}
             type={"text"}
-            register={register("tipo")}
             isLabel={false}
             message={errors?.tipo?.message}
+            {...register("tipo")}
           />
 
           <div className="flex flex-row justify-center items-center w-full text-center">
@@ -281,4 +271,10 @@ const AgregarTexto = () => {
   );
 };
 
-export default AgregarTexto;
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    setBooks: (movies: IBook[]) => dispatch(setBooks(movies)),
+  };
+};
+
+export default connect(mapDispatchToProps)(AgregarTexto);

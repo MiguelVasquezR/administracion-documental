@@ -1,19 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  movies: [],
+  prestamos: [],
 };
 
 export const counterSlice = createSlice({
-  name: "movies",
+  name: "prestamos",
   initialState,
   reducers: {
-    setMovies: (state, action) => {
-      state.movies = action.payload;
+    setPrestamos: (state, action) => {
+      state.prestamos = action.payload;
     },
   },
 });
 
-export const { setMovies } = counterSlice.actions;
+export const { setPrestamos } = counterSlice.actions;
 
 export default counterSlice.reducer;

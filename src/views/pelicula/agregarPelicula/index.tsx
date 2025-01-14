@@ -3,7 +3,7 @@
 import { convertToBase64 } from "@/utils/Utils";
 import { MovieValidator } from "@/validator/MovieValidator";
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, FieldValues } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import UploadImage from "@/component/UploadImage/UploadImage";
 import TextField from "@/component/TextField/TextField";
@@ -12,8 +12,16 @@ import TextList from "@/component/TextList/TextList";
 import { useParams, useRouter } from "next/navigation";
 import { countries } from "@/utils/Countries";
 import { languages } from "@/utils/Languages";
+import { connect } from "react-redux";
+import { IMovie } from "@/interfaces/interfacesBooks";
+import { setMovies } from "@/redux/movies";
+import { Dispatch } from "@reduxjs/toolkit";
 
-const AgregarPelicula = () => {
+interface IAgregarTextoProps {
+  setMovies: (movies: IMovie[]) => void;
+}
+
+const AgregarPelicula = ({ setMovies }: IAgregarTextoProps) => {
   const [image, setImage] = useState<string>("");
   const router = useRouter();
   const params = useParams();
@@ -57,7 +65,7 @@ const AgregarPelicula = () => {
     }
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FieldValues) => {
     data.imagen =
       image ||
       "https://res.cloudinary.com/dvt4vznxn/image/upload/v1736555915/yivyktkgvcjxprwwnwui.png";
@@ -77,6 +85,7 @@ const AgregarPelicula = () => {
     const dataResponse = await response.json();
     if (dataResponse.status === 200) {
       toast.success(dataResponse.message);
+      setMovies([]);
       router.push("/pelicula");
     } else {
       toast.error(dataResponse.message);
@@ -97,7 +106,7 @@ const AgregarPelicula = () => {
           console.log(error);
         });
     }
-  }, [params.id]);
+  }, [params.id, reset]);
 
   return (
     <div className="grid grid-cols-3 p-5">
@@ -105,7 +114,7 @@ const AgregarPelicula = () => {
         <UploadImage
           image={image}
           handleImageCapture={handleUpload}
-          register={register}
+          {...register("imagen")}
         />
       </div>
       <div className="col-span-2">
@@ -115,42 +124,34 @@ const AgregarPelicula = () => {
             label="Título"
             errors={!!errors.titulo}
             placeholder="Título"
-            onChange={(value) => {
-              setValue("titulo", value);
-            }}
             value={watch("titulo")}
             type={"text"}
-            register={register("titulo")}
             isLabel={false}
             message={errors?.titulo?.message}
+            {...register("titulo")}
           />
+
           <TextField
             label="Director"
-            errors={!!errors.director}
+            errors={!!errors.titulo}
             placeholder="Director"
-            onChange={(value) => {
-              setValue("director", value);
-            }}
             value={watch("director")}
             type={"text"}
-            register={register("director")}
             isLabel={false}
-            message={errors?.director?.message}
+            message={errors?.titulo?.message}
+            {...register("director")}
           />
 
           <div className="flex flex-row justify-between items-center gap-5 w-full">
             <TextField
               label="Año de Publicación"
-              errors={!!errors.anioPublicacion}
+              errors={!!errors.titulo}
               placeholder="Año de Publicación"
-              onChange={(value) => {
-                setValue("anioPublicacion", value);
-              }}
               value={watch("anioPublicacion")}
               type={"text"}
-              register={register("anioPublicacion")}
               isLabel={false}
-              message={errors?.anioPublicacion?.message}
+              message={errors?.titulo?.message}
+              {...register("anioPublicacion")}
             />
 
             <div className="w-full border border-gray-400 rounded-md p-1 relative">
@@ -174,31 +175,25 @@ const AgregarPelicula = () => {
 
           <div className="flex flex-row justify-between items-center gap-5 w-full">
             <TextField
-              label="Duracion"
-              errors={!!errors.duracion}
-              placeholder="Duracion"
-              onChange={(value) => {
-                setValue("duracion", value);
-              }}
+              label="Direción"
+              errors={!!errors.titulo}
+              placeholder="Direción"
               value={watch("duracion")}
               type={"text"}
-              register={register("duracion")}
               isLabel={false}
-              message={errors?.duracion?.message}
+              message={errors?.titulo?.message}
+              {...register("duracion")}
             />
 
             <TextField
-              label="Genero"
-              errors={!!errors.genero}
-              placeholder="Genero"
-              onChange={(value) => {
-                setValue("genero", value);
-              }}
+              label="Género"
+              errors={!!errors.titulo}
+              placeholder="Género"
               value={watch("genero")}
               type={"text"}
-              register={register("genero")}
               isLabel={false}
-              message={errors?.genero?.message}
+              message={errors?.titulo?.message}
+              {...register("genero")}
             />
           </div>
 
@@ -271,4 +266,10 @@ const AgregarPelicula = () => {
   );
 };
 
-export default AgregarPelicula;
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    setMovies: (movies: IMovie[]) => dispatch(setMovies(movies)),
+  };
+};
+
+export default connect(mapDispatchToProps)(AgregarPelicula);

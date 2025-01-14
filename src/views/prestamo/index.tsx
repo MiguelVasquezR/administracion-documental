@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { HiUserAdd } from "react-icons/hi";
 import TextField from "@/component/TextField/TextField";
-import { useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { IBook, IStudent } from "@/interfaces/interfacesBooks";
 
@@ -12,7 +12,12 @@ interface Props {
 }
 
 const Index = ({ closeModal, openModal }: Props) => {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
   const [openModalStudent, setOpenModalStudent] = useState(false);
 
   const [students, setStudents] = useState<IStudent[]>([]);
@@ -27,7 +32,7 @@ const Index = ({ closeModal, openModal }: Props) => {
     }
   }, []);
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: FieldValues) => {
     fetch("/api/estudiantes", {
       method: "POST",
       body: JSON.stringify(data),
@@ -69,7 +74,7 @@ const Index = ({ closeModal, openModal }: Props) => {
       .catch((err) => console.log(err));
   }, []);
 
-  const onSubmitPrestamo = (e: any) => {
+  const onSubmitPrestamo = (e: FieldValues) => {
     e.preventDefault();
     if (selectedBook && selectedStudent) {
       const data = {
@@ -94,7 +99,7 @@ const Index = ({ closeModal, openModal }: Props) => {
             toast.error(data.message);
           }
         })
-        .catch((err) => toast.error("Ocurrio un error, intentelo más tarde"));
+        .catch(() => toast.error("Ocurrio un error, intentelo más tarde"));
     } else {
       toast.error("Asegurate de seleccionar un libro y un estudiante");
     }
@@ -122,20 +127,38 @@ const Index = ({ closeModal, openModal }: Props) => {
             />
             <div className="flex flex-col gap-5">
               <TextField
+                label="Nombre Completo"
+                errors={!!errors.titulo}
                 placeholder="Nombre Completo"
-                register={register("nombre", { required: true })}
-                type="text"
+                value={watch("nombre")}
+                type={"text"}
+                isLabel={false}
+                message={""}
+                {...register("nombre")}
               />
+
               <TextField
-                placeholder="Matricula"
-                register={register("matricula", { required: true })}
-                type="text"
+                label="Matrícula"
+                errors={!!errors.titulo}
+                placeholder="Matrícula"
+                value={watch("matricula")}
+                type={"text"}
+                isLabel={false}
+                message={""}
+                {...register("matricula")}
               />
+
               <TextField
+                label="Correo"
+                errors={!!errors.titulo}
                 placeholder="Correo"
-                register={register("correo", { required: true })}
-                type="text"
+                value={watch("correo")}
+                type={"text"}
+                isLabel={false}
+                message={""}
+                {...register("correo")}
               />
+
               <button
                 type="submit"
                 className="bg-primary text-white px-5 py-2 rounded-md"

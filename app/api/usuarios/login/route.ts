@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const payload = await req.json();
-  const response = await login(payload.email, payload.password);
+  const response = await login(payload.correo, payload.password);
   if (response.status === 200) {
     return NextResponse.json({
       message: "Usuario autenticado correctamente",

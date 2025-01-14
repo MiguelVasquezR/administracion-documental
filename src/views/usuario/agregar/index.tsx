@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, FieldValues } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import TextField from "@/component/TextField/TextField";
 import toast from "react-hot-toast";
@@ -15,7 +15,6 @@ const AgregarPelicula = () => {
   const {
     register,
     handleSubmit,
-    setValue,
     watch,
     reset,
     formState: { errors },
@@ -30,7 +29,7 @@ const AgregarPelicula = () => {
     }
   }, []);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FieldValues) => {
     data.id = params.id || "";
 
     // Envolver la operación en toast.promise
@@ -77,7 +76,7 @@ const AgregarPelicula = () => {
           console.log(error);
         });
     }
-  }, [params.id]);
+  }, [params.id, reset]);
 
   return (
     <div className="flex justify-center items-center w-full">
@@ -88,40 +87,33 @@ const AgregarPelicula = () => {
             label="Nombre"
             errors={!!errors.nombre}
             placeholder="Nombre"
-            onChange={(value) => {
-              setValue("nombre", value);
-            }}
             value={watch("nombre")}
             type={"text"}
-            register={register("nombre")}
             isLabel={false}
             message={errors?.nombre?.message}
+            {...register("nombre")}
           />
+
           <TextField
             label="Correo"
             errors={!!errors.correo}
             placeholder="Correo"
-            onChange={(value) => {
-              setValue("correo", value);
-            }}
             value={watch("correo")}
-            type={"email"}
-            register={register("correo")}
+            type={"text"}
             isLabel={false}
             message={errors?.correo?.message}
+            {...register("correo")}
           />
+
           <TextField
             label="Contraseña"
             errors={!!errors.password}
-            placeholder="Contraseñ"
-            onChange={(value) => {
-              setValue("password", value);
-            }}
+            placeholder="Contraseña"
             value={watch("password")}
             type={"text"}
-            register={register("password")}
             isLabel={false}
             message={errors?.password?.message}
+            {...register("password")}
           />
         </form>
         <div className="flex flex-row justify-end items-center gap-5 w-full">

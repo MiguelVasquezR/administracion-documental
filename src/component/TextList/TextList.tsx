@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import { UseFormRegisterReturn } from "react-hook-form";
 
 type AutocompleteProps = {
   options: string[];
   placeholder: string;
   errors?: boolean;
   message?: string;
-  register?: UseFormRegisterReturn<any>;
+  register?: UseFormRegisterReturn;
 };
 
 const Autocomplete: React.FC<AutocompleteProps> = ({
@@ -25,7 +26,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
 
     if (value) {
       const filtered = options.filter((option) =>
-        option.toLowerCase().includes(value.toLowerCase())
+        option?.toLowerCase().includes(value?.toLowerCase())
       );
       setFilteredOptions(filtered);
       setDropdownVisible(true);

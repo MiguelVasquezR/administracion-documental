@@ -1,23 +1,28 @@
 import Image from "next/image";
 import React from "react";
-import { UseFormRegister } from "react-hook-form";
 
-interface UploadImageProps {
+interface UploadImageProps extends React.InputHTMLAttributes<HTMLInputElement> {
   image: string | "";
-  register: UseFormRegister<any>;
   handleImageCapture: (file: File) => void;
+  name: string;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  onBlur: React.FocusEventHandler<HTMLInputElement>;
+  ref: React.Ref<HTMLInputElement>;
 }
 
 const UploadImage = ({
   image,
-  register,
   handleImageCapture,
+  name,
+  onChange,
+  onBlur,
+  ref,
+  ...props // Para capturar cualquier otra propiedad extra
 }: UploadImageProps) => {
   return (
     <div style={{ textAlign: "center", marginTop: "20px" }}>
       {image !== "" ? (
         <Image
-          {...register("imagen")}
           alt="Imagen"
           src={image}
           width={300}
@@ -37,13 +42,18 @@ const UploadImage = ({
         id="fileInput"
         type="file"
         accept="image/*"
+        name={name}
         onChange={(e) => {
           const file = e.target.files?.[0];
           if (file) {
             handleImageCapture(file);
           }
+          onChange(e); // También llamar al onChange de react-hook-form
         }}
+        onBlur={onBlur}
+        ref={ref}
         style={{ display: "none" }}
+        {...props} // Asegura que otras props se apliquen
       />
     </div>
   );

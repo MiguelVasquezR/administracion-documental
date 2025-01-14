@@ -1,17 +1,25 @@
 "use client";
 
 import LinkButton from "@/component/LinkButton/LinkButton";
+import { IGlobal } from "@/interfaces/globalState";
 import { IBook } from "@/interfaces/interfacesBooks";
+import { setBooks } from "@/redux/books";
+import { Dispatch } from "@reduxjs/toolkit";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { MdModeEditOutline } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
+import { connect } from "react-redux";
 
-const Index = () => {
+interface IProps {
+  books: IBook[];
+  setBooks: (books: IBook[]) => void;
+}
+
+const Index = ({ books, setBooks }: IProps) => {
   const router = useRouter();
-  const [libros, setLibros] = useState([]);
   const [librosSeleccionados, setLibrosSeleccionados] = useState<IBook | null>(
     null
   );
@@ -32,15 +40,17 @@ const Index = () => {
   }, []);
 
   const handleGetLibros = async () => {
-    fetch("/api/libros")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === 200) {
-          setLibros(data.data);
-        } else {
-          toast.error("Por el momento no es posible obtener los libros");
-        }
-      });
+    if (books === undefined || books?.length < 1) {
+      fetch("/api/libros")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.status === 200) {
+            setBooks(data.data);
+          } else {
+            toast.error("Por el momento no es posible obtener los libros");
+          }
+        });
+    }
   };
 
   const handleDelete = async () => {
@@ -112,7 +122,7 @@ const Index = () => {
               </tr>
             </thead>
             <tbody className="text-center">
-              {libros.map((libro: IBook) => (
+              {books.map((libro: IBook) => (
                 <tr
                   key={libro.id}
                   onClick={() => setLibrosSeleccionados(libro)}
@@ -154,4 +164,16 @@ const Index = () => {
   );
 };
 
-export default Index;
+const mapStateToProps = (state: IGlobal) => {
+  return {
+    books: state.books.books || [],
+  };
+};
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    setBooks: (books: IBook[]) => dispatch(setBooks(books)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Index);

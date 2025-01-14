@@ -8,7 +8,11 @@ export interface IBook {
   tipo: string;
   imagen: string;
   numPag: string;
-  ubicacion: object;
+  ubicacion: {
+    col?: number;
+    row?: number;
+    respisa: string;
+  };
 }
 
 export interface IMovie {

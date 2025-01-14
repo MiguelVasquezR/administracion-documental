@@ -1,11 +1,16 @@
 import * as yup from "yup";
 
-export const BookValidator = yup.object({
-  titulo: yup.string().required("El titulo es requerido"),
-  autor: yup.string().required("El autor es requerido"),
-  editorial: yup.string().required("La editorial es requerida"),
-  numPag: yup.string().required("El numero de paginas es requerido"),
-  anioPublicacion: yup.string().required("El año de publicacion es requerido"),
-  ubicacion: yup.object().required("La ubicacion es requerida"),
-  tipo: yup.string().required("El tipo es requerido"),
+export const BookValidator = yup.object().shape({
+  imagen: yup.string().required(),
+  titulo: yup.string().required(),
+  autor: yup.string().required(),
+  editorial: yup.string().required(),
+  numPag: yup.string().required(),
+  anioPublicacion: yup.string().required(),
+  ubicacion: yup.object().shape({
+    col: yup.number().optional(),
+    row: yup.number().optional(),
+    respisa: yup.string().required(),
+  }),
+  tipo: yup.string().required(),
 });

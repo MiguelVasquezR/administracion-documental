@@ -1,19 +1,27 @@
 "use client";
 
 import LinkButton from "@/component/LinkButton/LinkButton";
+import { IGlobal } from "@/interfaces/globalState";
 import { IMovie } from "@/interfaces/interfacesBooks";
+import { setMovies } from "@/redux/movies";
+import { Dispatch } from "@reduxjs/toolkit";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { MdModeEditOutline } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
+import { connect } from "react-redux";
 
-const Index = () => {
+interface IIndexProps {
+  movies: IMovie[];
+  setPeliculas: (movies: IMovie[]) => void;
+}
+
+const Index = ({ movies, setPeliculas }: IIndexProps) => {
   const router = useRouter();
-  const [peliculas, setPeliculas] = useState([]);
   const [peliculasSeleccionadas, setPeliculasSeleccionadas] =
-    useState<IMovie | null>(null);
+    useState<IMovie>();
   const [loadingType, setLoadingType] = useState<{
     isLoading: boolean;
     isDeleting: boolean;
@@ -29,23 +37,25 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
+    handleGetPeliculas();
     setLoadingType({
       ...loadingType,
       isLoading: true,
     });
-    handleGetPeliculas();
   }, []);
 
   const handleGetPeliculas = async () => {
-    fetch("/api/peliculas")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === 200) {
-          setPeliculas(data.data);
-        } else {
-          toast.error("Por el momento no es posible obtener las peliculas");
-        }
-      });
+    if (movies === undefined || movies?.length < 1) {
+      fetch("/api/peliculas")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.status === 200) {
+            setPeliculas(data.data);
+          } else {
+            toast.error("Por el momento no es posible obtener las peliculas");
+          }
+        });
+    }
   };
 
   const handleDelete = async () => {
@@ -56,8 +66,6 @@ const Index = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.status === 200) {
-          toast.success(data.message);
-          setPeliculasSeleccionadas(null);
           handleGetPeliculas();
         } else {
           toast.error(data.message);
@@ -65,6 +73,9 @@ const Index = () => {
       })
       .catch(() => {
         toast.error("Error al eliminar la pelicula");
+      })
+      .finally(() => {
+        setPeliculasSeleccionadas(undefined);
       });
   };
 
@@ -112,7 +123,7 @@ const Index = () => {
               </tr>
             </thead>
             <tbody className="text-center">
-              {peliculas.map((pelicula: IMovie) => (
+              {movies?.map((pelicula: IMovie) => (
                 <tr
                   key={pelicula.id}
                   onClick={() => setPeliculasSeleccionadas(pelicula)}
@@ -151,4 +162,16 @@ const Index = () => {
   );
 };
 
-export default Index;
+const mapStateToProps = (state: IGlobal) => {
+  return {
+    movies: state.movies.movies || [],
+  };
+};
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    setPeliculas: (movies: IMovie[]) => dispatch(setMovies(movies)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Index);

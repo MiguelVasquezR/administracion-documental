@@ -1,6 +1,6 @@
 import React from "react";
 
-import AgregarPelicula from "@/views/pelicula/agregarPelicula/index";
+import Index from "@/views/pelicula/agregarPelicula/index";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 const page = () => {
-  return <AgregarPelicula />;
+  return <Index />;
 };
 
 export default page;
