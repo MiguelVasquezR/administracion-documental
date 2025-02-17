@@ -25,10 +25,8 @@ const Index = ({ prestamos, setPrestamos, user }: IProps) => {
   const [usuarioLS, setUsuarioLS] = useState<IUsuario | null>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (localStorage.getItem("autenticado") !== "true") {
-        window.location.href = "/biblioteca";
-      }
+    if (localStorage.getItem("autenticado") !== "true") {
+      window.location.href = "/biblioteca";
     }
 
     const user = localStorage.getItem("user");
