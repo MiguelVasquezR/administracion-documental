@@ -3,7 +3,6 @@ import type { NextRequest } from "next/server";
 
 export default async function middleware(req: NextRequest) {
   const currentPath = req.nextUrl.pathname;
-  console.log({ currentPath });
 
   const publicRoutes = ["/biblioteca", "/videoteca", "/biblioteca/:id"];
 

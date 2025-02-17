@@ -26,7 +26,7 @@ const Index = ({ prestamos, setPrestamos, user }: IProps) => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (localStorage.getItem("autenticado") !== "true") {
-        window.location.href = "/login";
+        window.location.href = "/biblioteca";
       }
     }
   }, []);
