@@ -23,6 +23,8 @@ interface IProps {
 const Index = ({ prestamos, setPrestamos, user }: IProps) => {
   const [openModal, setOpenModal] = useState(false);
 
+  console.log(user);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (localStorage.getItem("autenticado") !== "true") {

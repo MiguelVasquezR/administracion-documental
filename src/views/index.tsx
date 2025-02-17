@@ -22,10 +22,8 @@ const Index = ({ children, usuario, setUser }: IndexProps) => {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const user = localStorage.getItem("user");
-    if (!usuario) {
-      setUser(user ? JSON.parse(user) : null);
-    }
-  }, [usuario]);
+    setUser(user ? JSON.parse(user) : null);
+  }, [setUser, usuario]);
 
   return (
     <>
