@@ -199,6 +199,7 @@ const Index = ({ closeModal, openModal }: Props) => {
                         setSelectedBook(book ?? null); // Asegúrate de que no sea undefined
                       }}
                     >
+                      <option value="">Seleccionar</option>
                       {books.map((book) => (
                         <option key={book.id} value={book.id}>
                           {book.titulo}
@@ -225,6 +226,7 @@ const Index = ({ closeModal, openModal }: Props) => {
                           setSelectedStudent(student ?? null); // Asegúrate de que no sea undefined
                         }}
                       >
+                        <option value="">Seleccionar</option>
                         {students.map((student) => (
                           <option key={student.id} value={student.id}>
                             {student.matricula}

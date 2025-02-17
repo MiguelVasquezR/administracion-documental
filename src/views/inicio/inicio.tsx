@@ -22,6 +22,7 @@ interface IProps {
 
 const Index = ({ prestamos, setPrestamos, user }: IProps) => {
   const [openModal, setOpenModal] = useState(false);
+  const [usuarioLS, setUsuarioLS] = useState<IUsuario | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -29,6 +30,9 @@ const Index = ({ prestamos, setPrestamos, user }: IProps) => {
         window.location.href = "/biblioteca";
       }
     }
+
+    const user = localStorage.getItem("user");
+    setUsuarioLS(user ? JSON.parse(user) : null);
   }, []);
 
   useEffect(() => {
@@ -88,7 +92,7 @@ const Index = ({ prestamos, setPrestamos, user }: IProps) => {
     <>
       <div className="flex flex-row items-center justify-between p-4 text-lg font-bold">
         <div>
-          <h2>Hola, {user.nombre} ✋🏻</h2>
+          <h2>Hola, {usuarioLS?.nombre} ✋🏻</h2>
           <p>{getFecha()}</p>
         </div>
         <button
