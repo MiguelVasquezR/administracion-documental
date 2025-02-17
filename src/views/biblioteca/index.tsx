@@ -20,13 +20,7 @@ const Index = ({ books, setBooks }: IProps) => {
   const { register, watch, setValue } = useForm();
 
   useEffect(() => {
-    if (localStorage.getItem("autenticado") !== "true") {
-      window.location.href = "/login";
-    }
     setValue("search", "");
-  }, []);
-
-  useEffect(() => {
     if (books === undefined || books.length < 1) {
       fetch("/api/libros")
         .then((res) => res.json())
@@ -39,7 +33,7 @@ const Index = ({ books, setBooks }: IProps) => {
         })
         .catch((err) => console.log(err));
     }
-  }, []);
+  }, [setBooks, books]);
 
   const filterBooks = books.filter((book) =>
     book.titulo?.toLowerCase().includes(watch("search")?.toLowerCase())
@@ -61,7 +55,7 @@ const Index = ({ books, setBooks }: IProps) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 p-5 w-full">
+      <div className="grid items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 p-5 w-full">
         {filterBooks?.map((book: IBook, index: number) => (
           <CardBook key={index} {...book} />
         ))}

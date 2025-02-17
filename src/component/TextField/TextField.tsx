@@ -40,7 +40,7 @@ const TextField = ({
           name={name}
           placeholder={placeholder}
           onChange={(e) => onChange(e)}
-          value={value}
+          value={value || ""}
           type={type || "text"}
           className="border-transparent w-full h-full p-2 outline-none"
           {...register}

@@ -5,6 +5,7 @@ export interface IBook {
   anioPublicacion: string;
   editorial: string;
   description: string;
+  descripcion: string;
   tipo: string;
   imagen: string;
   numPag: string;

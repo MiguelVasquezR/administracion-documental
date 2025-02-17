@@ -24,13 +24,7 @@ const Index = ({ movies: peliculas, setPeliculas }: IIndexProps) => {
   );
 
   useEffect(() => {
-    if (localStorage.getItem("autenticado") !== "true") {
-      window.location.href = "/login";
-    }
     setValue("search", "");
-  }, []);
-
-  useEffect(() => {
     if (peliculas === undefined || peliculas.length < 1) {
       fetch("/api/peliculas")
         .then((res) => res.json())
@@ -43,7 +37,7 @@ const Index = ({ movies: peliculas, setPeliculas }: IIndexProps) => {
         })
         .catch((err) => console.log(err));
     }
-  }, []);
+  }, [peliculas, setPeliculas]);
 
   return (
     <>

@@ -67,7 +67,7 @@ const Login = ({ setUser }: ILoginProps) => {
           label="Password"
           placeholder="Password"
           value={watch("password")}
-          type={"text"}
+          type={"password"}
           isLabel={false}
           {...register("password")}
         />

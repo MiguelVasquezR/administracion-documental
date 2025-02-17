@@ -1,5 +1,6 @@
 import { IBook } from "@/interfaces/interfacesBooks";
 import Image from "next/image";
+import Link from "next/link";
 
 const CardBook = ({
   titulo,
@@ -7,9 +8,13 @@ const CardBook = ({
   anioPublicacion,
   editorial,
   imagen,
+  id,
 }: IBook) => {
   return (
-    <div className="w-[350px] h-[200px] rounded-md shadow-md flex flex-row justify-center items-center gap-2 cursor-pointer">
+    <Link
+      href={`/biblioteca/${id}`}
+      className="w-[350px] h-[200px] rounded-md shadow-md flex flex-row justify-center items-center gap-2 cursor-pointer"
+    >
       <div className="w-[40%] h-[200px] bg-primary/50 rounded-md">
         <Image
           src={imagen}
@@ -40,7 +45,7 @@ const CardBook = ({
           <p className="text-md">{editorial}</p>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

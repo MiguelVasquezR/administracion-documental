@@ -1,10 +1,19 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname === "/") {
-    const url = request.nextUrl.clone();
-    url.pathname = "/inicio"; // Redirige a '/inicio'
+export default async function middleware(req: NextRequest) {
+  const currentPath = req.nextUrl.pathname;
+  console.log({ currentPath });
+
+  const publicRoutes = ["/biblioteca", "/videoteca", "/biblioteca/:id"];
+
+  if (publicRoutes.some((val) => currentPath.includes(val))) {
+    return NextResponse.next();
+  }
+
+  if (req.nextUrl.pathname === "/") {
+    const url = req.nextUrl.clone();
+    url.pathname = "/inicio";
     return NextResponse.redirect(url);
   }
 
@@ -12,5 +21,7 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/", // Aplica el middleware solo para la raíz '/'
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+  ],
 };
