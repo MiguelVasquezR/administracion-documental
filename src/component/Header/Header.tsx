@@ -17,12 +17,15 @@ const Header = () => {
     setActive(!active);
   };
 
-  const isLogged = localStorage.getItem("autenticado");
+  const isLogged =
+    typeof window !== "undefined" && localStorage.getItem("autenticado");
 
   const handleLogout = () => {
-    localStorage.removeItem("autenticado");
-    localStorage.removeItem("user");
-    window.location.reload();
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("autenticado");
+      localStorage.removeItem("user");
+      window.location.reload();
+    }
   };
 
   const desactiveMenu = () => {

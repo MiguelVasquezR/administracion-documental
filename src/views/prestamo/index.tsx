@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { HiUserAdd } from "react-icons/hi";
@@ -27,6 +29,7 @@ const Index = ({ closeModal, openModal }: Props) => {
   const [selectedStudent, setSelectedStudent] = useState<IStudent | null>(null);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     if (localStorage.getItem("autenticado") !== "true") {
       window.location.href = "/login";
     }

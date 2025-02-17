@@ -24,8 +24,10 @@ const Index = ({ prestamos, setPrestamos, user }: IProps) => {
   const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem("autenticado") !== "true") {
-      window.location.href = "/login";
+    if (typeof window !== "undefined") {
+      if (localStorage.getItem("autenticado") !== "true") {
+        window.location.href = "/login";
+      }
     }
   }, []);
 

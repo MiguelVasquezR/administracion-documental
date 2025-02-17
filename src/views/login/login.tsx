@@ -21,6 +21,7 @@ const Login = ({ setUser }: ILoginProps) => {
   const { register, watch, handleSubmit } = useForm();
 
   const onSubmit = (e: FieldValues) => {
+    if (typeof window === "undefined") return;
     fetch("/api/usuarios/login", {
       method: "POST",
       body: JSON.stringify(e),

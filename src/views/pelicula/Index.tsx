@@ -31,6 +31,7 @@ const Index = ({ movies, setPeliculas }: IIndexProps) => {
   });
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     if (localStorage.getItem("autenticado") !== "true") {
       window.location.href = "/login";
     }

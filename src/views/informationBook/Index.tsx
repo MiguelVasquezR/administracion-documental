@@ -80,10 +80,10 @@ const Index = ({ books }: { books: IBook[] }) => {
           <h2 className="font-bold text-2xl my-2">Ubicación</h2>
           <Location
             selectedCell={{
-              row: book?.ubicacion.row,
-              col: book?.ubicacion.col,
+              row: book?.ubicacion.row || 0,
+              col: book?.ubicacion.col || 0,
             }}
-            setSelectedCell={book?.ubicacion}
+            setSelectedCell={()=>{}}
             row={book?.ubicacion.respisa === "1" ? 3 : 4}
             col={book?.ubicacion.respisa === "1" ? 5 : 6}
           />

@@ -18,9 +18,9 @@ interface IndexProps {
 
 const Index = ({ children, usuario, setUser }: IndexProps) => {
   const path = usePathname();
-  
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     const user = localStorage.getItem("user");
     if (!usuario) {
       setUser(user ? JSON.parse(user) : null);
