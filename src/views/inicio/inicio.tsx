@@ -25,6 +25,7 @@ const Index = ({ prestamos, setPrestamos, user }: IProps) => {
   const [openModal, setOpenModal] = useState(false);
   const [usuarioLS, setUsuarioLS] = useState<IUsuario | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [newPrestamoObserver, setNewPrestamoObserver] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem("autenticado") !== "true") {
@@ -34,6 +35,22 @@ const Index = ({ prestamos, setPrestamos, user }: IProps) => {
     const user = localStorage.getItem("user");
     setUsuarioLS(user ? JSON.parse(user) : null);
   }, []);
+
+  useEffect(() => {
+    if (newPrestamoObserver) {
+      fetch("/api/prestamo", {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.status === 200) {
+            setPrestamos(data.data);
+          } else {
+            toast.error(data.message);
+          }
+        });
+    }
+  }, [newPrestamoObserver, setNewPrestamoObserver]);
 
   useEffect(() => {
     if (!user) {
@@ -62,15 +79,29 @@ const Index = ({ prestamos, setPrestamos, user }: IProps) => {
   }, []);
 
   const handleEntregar = (prestamo: IPrestamo) => {
-    prestamo.estado = "Entregado";
+    const prestamoDevuelto = {
+      ...prestamo,
+      estado: "Entregado",
+    };
     fetch("/api/prestamo", {
       method: "PUT",
-      body: JSON.stringify(prestamo),
+      body: JSON.stringify(prestamoDevuelto),
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.status === 200) {
           toast.success(data.message);
+
+          const prestamosActualizados = prestamos.map(
+            (prestamoItem: IPrestamo) => {
+              if (prestamoItem.id === prestamo.id) {
+                return prestamoDevuelto;
+              }
+              return prestamoItem;
+            }
+          );
+
+          setPrestamos(prestamosActualizados);
         } else {
           toast.error(data.message);
         }
@@ -195,6 +226,8 @@ const Index = ({ prestamos, setPrestamos, user }: IProps) => {
         <ModalPrestamo
           openModal={openModal}
           closeModal={() => setOpenModal(false)}
+          prestamos={prestamos}
+          setNewPrestamoObserver={setNewPrestamoObserver}
         />
       )}
     </>

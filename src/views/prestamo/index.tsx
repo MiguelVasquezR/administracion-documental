@@ -6,14 +6,21 @@ import { HiUserAdd } from "react-icons/hi";
 import TextField from "@/component/TextField/TextField";
 import { FieldValues, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { IBook, IStudent } from "@/interfaces/interfacesBooks";
+import { IBook, IPrestamo, IStudent } from "@/interfaces/interfacesBooks";
 
 interface Props {
   closeModal: () => void;
   openModal: boolean;
+  prestamos: IPrestamo[];
+  setNewPrestamoObserver: (value: boolean) => void;
 }
 
-const Index = ({ closeModal, openModal }: Props) => {
+const Index = ({
+  closeModal,
+  openModal,
+  prestamos,
+  setNewPrestamoObserver,
+}: Props) => {
   const {
     register,
     handleSubmit,
@@ -80,9 +87,24 @@ const Index = ({ closeModal, openModal }: Props) => {
   const onSubmitPrestamo = (e: FieldValues) => {
     e.preventDefault();
     if (selectedBook && selectedStudent) {
+      const libroPrestado = prestamos.find((prestamo: IPrestamo) => {
+        if (
+          prestamo.libro.id === selectedBook.id &&
+          prestamo.estado === "Prestado"
+        ) {
+          return true;
+        }
+      });
+
+      if (libroPrestado) {
+        toast.error("El libro seleccionado ya ha sido prestado");
+        return;
+      }
+
       const data = {
         libro: selectedBook,
         estudiante: selectedStudent,
+        estado: "Prestado",
         fechaPrestamo: new Date().toLocaleDateString(),
         fechaDevolucion: new Date(
           new Date().setDate(new Date().getDate() + 15)
@@ -97,6 +119,7 @@ const Index = ({ closeModal, openModal }: Props) => {
         .then((data) => {
           if (data.status === 200) {
             toast.success(data.message);
+            setNewPrestamoObserver(true);
             closeModal();
           } else {
             toast.error(data.message);
