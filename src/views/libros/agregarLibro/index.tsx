@@ -206,6 +206,17 @@ const AgregarTexto = ({ setBooks }: IAgregarTextoProps) => {
             {...register("tipo")}
           />
 
+          <div className="w-full">
+            <textarea
+              {...register("descripcion")}
+              placeholder="Descripción"
+              className="w-full min-h-[120px] max-h-[200px] border-solid border-gray-400 border-[1px] rounded-md outline-none p-2"
+            />
+            {errors.descripcion && (
+              <p className="text-red-500">{errors.descripcion.message}</p>
+            )}
+          </div>
+
           <div className="flex flex-row justify-center items-center w-full text-center">
             <button
               type="button"
