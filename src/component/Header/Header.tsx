@@ -135,7 +135,7 @@ const Header = () => {
               href={"/login"}
               className="flex flex-col justify-center items-center gap-1 cursor-pointer"
             >
-              <CiLogin onClick={handleLogout} size={24} color="white" />
+              <CiLogin size={24} color="white" />
               <p className="text-white text-[12px]">Iniciar Sesión</p>
             </Link>
           )}

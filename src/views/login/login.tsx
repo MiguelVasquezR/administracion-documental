@@ -46,7 +46,7 @@ const Login = ({ setUser }: ILoginProps) => {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-primary">
       <form
-        className="flex flex-col justify-center gap-4 bg-white rounded-md p-5 h-[600px] w-[400px]"
+        className="w-[320px] flex flex-col justify-center gap-4 bg-white rounded-md p-5 h-[600px] lg:w-[400px]"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="flex justify-center">

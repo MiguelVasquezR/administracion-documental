@@ -44,7 +44,7 @@ const Index = ({ books }: { books: IBook[] }) => {
   }
 
   return (
-    <div className="flex flex-row justify-center items-center my-5 gap-5 relative">
+    <div className="flex-col flex lg:flex-row justify-center items-center my-5 gap-5 relative">
       <IoMdArrowRoundBack
         size={32}
         className="absolute top-0 left-5 cursor-pointer"
@@ -52,7 +52,8 @@ const Index = ({ books }: { books: IBook[] }) => {
           router.back();
         }}
       />
-      <div className="shadow-md rounded-md p-5 flex justify-center flex-col gap-4">
+
+      <div className=" shadow-md rounded-md p-5 flex justify-center flex-col gap-4">
         <picture className="flex justify-center items-center">
           <Image
             width={200}
@@ -71,11 +72,13 @@ const Index = ({ books }: { books: IBook[] }) => {
         </article>
       </div>
 
-      <div className="w-[50%] mx-5 flex-col flex gap-5">
-        <div>
-          <h2 className="font-bold text-2xl my-2">Descripción</h2>
-          <p className="text-justify leading-8">{book?.descripcion}</p>
-        </div>
+      <div className=" w-[320px] md:w-[50%] mx-5 flex-col flex gap-5">
+        {book?.descripcion && (
+          <div>
+            <h2 className="font-bold text-2xl my-2">Descripción</h2>
+            <p className="text-justify leading-8">{book?.descripcion}</p>
+          </div>
+        )}
         <div>
           <h2 className="font-bold text-2xl my-2">Ubicación</h2>
           <Location
@@ -83,7 +86,7 @@ const Index = ({ books }: { books: IBook[] }) => {
               row: book?.ubicacion.row || 0,
               col: book?.ubicacion.col || 0,
             }}
-            setSelectedCell={()=>{}}
+            setSelectedCell={() => {}}
             row={book?.ubicacion.respisa === "1" ? 3 : 4}
             col={book?.ubicacion.respisa === "1" ? 5 : 6}
           />
