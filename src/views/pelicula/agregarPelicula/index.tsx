@@ -134,24 +134,24 @@ const AgregarPelicula = ({ setMovies }: IAgregarTextoProps) => {
 
           <TextField
             label="Director"
-            errors={!!errors.titulo}
+            errors={!!errors.director}
             placeholder="Director"
             value={watch("director")}
             type={"text"}
             isLabel={false}
-            message={errors?.titulo?.message}
+            message={errors?.director?.message}
             {...register("director")}
           />
 
           <div className="flex flex-row justify-between items-center gap-5 w-full">
             <TextField
               label="Año de Publicación"
-              errors={!!errors.titulo}
+              errors={!!errors.anioPublicacion}
               placeholder="Año de Publicación"
               value={watch("anioPublicacion")}
               type={"text"}
               isLabel={false}
-              message={errors?.titulo?.message}
+              message={errors?.anioPublicacion?.message}
               {...register("anioPublicacion")}
             />
 
@@ -177,23 +177,23 @@ const AgregarPelicula = ({ setMovies }: IAgregarTextoProps) => {
           <div className="flex flex-row justify-between items-center gap-5 w-full">
             <TextField
               label="Duración"
-              errors={!!errors.titulo}
+              errors={!!errors.duracion}
               placeholder="Duración"
               value={watch("duracion")}
               type={"text"}
               isLabel={false}
-              message={errors?.titulo?.message}
+              message={errors?.duracion?.message}
               {...register("duracion")}
             />
 
             <TextField
               label="Género"
-              errors={!!errors.titulo}
+              errors={!!errors.genero}
               placeholder="Género"
               value={watch("genero")}
               type={"text"}
               isLabel={false}
-              message={errors?.titulo?.message}
+              message={errors?.genero?.message}
               {...register("genero")}
             />
           </div>

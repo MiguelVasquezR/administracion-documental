@@ -1,7 +1,7 @@
 "use client";
 
 import TextField from "@/component/TextField/TextField";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import CardMovie from "@/component/CardMovie";
@@ -10,6 +10,7 @@ import { connect } from "react-redux";
 import { setMovies } from "@/redux/movies";
 import { Dispatch } from "@reduxjs/toolkit";
 import { IGlobal } from "@/interfaces/globalState";
+import Loading from "@/component/Loader/Loader";
 
 interface IIndexProps {
   movies: IMovie[];
@@ -18,6 +19,7 @@ interface IIndexProps {
 
 const Index = ({ movies: peliculas, setPeliculas }: IIndexProps) => {
   const { register, watch, setValue } = useForm();
+  const [isLoading, setIsLoading] = useState(true);
 
   const filterMovies = peliculas.filter((book) =>
     book.titulo?.toLowerCase().includes(watch("search")?.toLowerCase())
@@ -34,10 +36,17 @@ const Index = ({ movies: peliculas, setPeliculas }: IIndexProps) => {
           } else {
             toast.error(data.message);
           }
+          setIsLoading(false);
         })
         .catch((err) => console.log(err));
+    } else {
+      setIsLoading(false);
     }
   }, [peliculas, setPeliculas]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <>

@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import { MdModeEditOutline } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { connect } from "react-redux";
+import Loading from "@/component/Loader/Loader";
 
 interface IIndexProps {
   movies: IMovie[];
@@ -26,7 +27,7 @@ const Index = ({ movies, setPeliculas }: IIndexProps) => {
     isLoading: boolean;
     isDeleting: boolean;
   }>({
-    isLoading: false,
+    isLoading: true,
     isDeleting: false,
   });
 
@@ -39,10 +40,6 @@ const Index = ({ movies, setPeliculas }: IIndexProps) => {
 
   useEffect(() => {
     handleGetPeliculas();
-    setLoadingType({
-      ...loadingType,
-      isLoading: true,
-    });
   }, []);
 
   const handleGetPeliculas = async () => {
@@ -55,7 +52,16 @@ const Index = ({ movies, setPeliculas }: IIndexProps) => {
           } else {
             toast.error("Por el momento no es posible obtener las peliculas");
           }
+          setLoadingType({
+            ...loadingType,
+            isLoading: false,
+          });
         });
+    } else {
+      setLoadingType({
+        ...loadingType,
+        isLoading: false,
+      });
     }
   };
 
@@ -79,6 +85,8 @@ const Index = ({ movies, setPeliculas }: IIndexProps) => {
         setPeliculasSeleccionadas(undefined);
       });
   };
+
+  if (loadingType.isLoading) return <Loading />;
 
   return (
     <>

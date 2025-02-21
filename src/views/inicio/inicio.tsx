@@ -12,6 +12,7 @@ import { setPrestamos } from "@/redux/prestamos";
 import { connect } from "react-redux";
 import clsx from "clsx";
 import { setUsuario } from "@/redux/usuario";
+import Loading from "@/component/Loader/Loader";
 
 interface IProps {
   prestamos: IPrestamo[];
@@ -23,6 +24,7 @@ interface IProps {
 const Index = ({ prestamos, setPrestamos, user }: IProps) => {
   const [openModal, setOpenModal] = useState(false);
   const [usuarioLS, setUsuarioLS] = useState<IUsuario | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (localStorage.getItem("autenticado") !== "true") {
@@ -52,7 +54,10 @@ const Index = ({ prestamos, setPrestamos, user }: IProps) => {
           } else {
             toast.error(data.message);
           }
+          setIsLoading(false);
         });
+    } else {
+      setIsLoading(false);
     }
   }, []);
 
@@ -85,6 +90,10 @@ const Index = ({ prestamos, setPrestamos, user }: IProps) => {
         }
       });
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <>

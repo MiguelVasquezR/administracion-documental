@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { MdModeEditOutline } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
+import Loading from "@/component/Loader/Loader";
 
 const Index = () => {
   const router = useRouter();
@@ -18,7 +19,7 @@ const Index = () => {
     isLoading: boolean;
     isDeleting: boolean;
   }>({
-    isLoading: false,
+    isLoading: true,
     isDeleting: false,
   });
 
@@ -30,10 +31,6 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    setLoadingType({
-      ...loadingType,
-      isLoading: true,
-    });
     handleGetUsuarios();
   }, []);
 
@@ -46,8 +43,14 @@ const Index = () => {
         } else {
           toast.error("Por el momento no es posible obtener las peliculas");
         }
+        setLoadingType({
+          ...loadingType,
+          isLoading: false,
+        });
       });
   };
+
+  if (loadingType.isLoading) return <Loading />;
 
   const handleDelete = async () => {
     if (loadingType?.isDeleting) return;

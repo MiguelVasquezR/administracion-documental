@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import { MdModeEditOutline } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { connect } from "react-redux";
+import Loading from "@/component/Loader/Loader";
 
 interface IProps {
   books: IBook[];
@@ -27,15 +28,11 @@ const Index = ({ books, setBooks }: IProps) => {
     isLoading: boolean;
     isDeleting: boolean;
   }>({
-    isLoading: false,
+    isLoading: true,
     isDeleting: false,
   });
 
   useEffect(() => {
-    setLoadingType({
-      ...loadingType,
-      isLoading: true,
-    });
     handleGetLibros();
   }, []);
 
@@ -49,7 +46,16 @@ const Index = ({ books, setBooks }: IProps) => {
           } else {
             toast.error("Por el momento no es posible obtener los libros");
           }
+          setLoadingType({
+            ...loadingType,
+            isLoading: false,
+          });
         });
+    } else {
+      setLoadingType({
+        ...loadingType,
+        isLoading: false,
+      });
     }
   };
 
@@ -79,6 +85,8 @@ const Index = ({ books, setBooks }: IProps) => {
       window.location.href = "/biblioteca";
     }
   }, []);
+
+  if (loadingType.isLoading) return <Loading />;
 
   return (
     <>

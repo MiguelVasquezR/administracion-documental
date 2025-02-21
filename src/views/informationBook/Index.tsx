@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { connect } from "react-redux";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import Loading from "@/component/Loader/Loader";
 
 const Index = ({ books }: { books: IBook[] }) => {
   const params = useParams();
@@ -40,7 +41,7 @@ const Index = ({ books }: { books: IBook[] }) => {
   }, [id, books]);
 
   if (isLoading) {
-    return <div>Cargando...</div>;
+    return <Loading />;
   }
 
   return (

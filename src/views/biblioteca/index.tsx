@@ -6,10 +6,11 @@ import { IGlobal } from "@/interfaces/globalState";
 import { IBook } from "@/interfaces/interfacesBooks";
 import { setBooks } from "@/redux/books";
 import { Dispatch } from "@reduxjs/toolkit";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { connect } from "react-redux";
+import Loading from "@/component/Loader/Loader";
 
 interface IProps {
   books: IBook[];
@@ -18,6 +19,7 @@ interface IProps {
 
 const Index = ({ books, setBooks }: IProps) => {
   const { register, watch, setValue } = useForm();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setValue("search", "");
@@ -30,14 +32,21 @@ const Index = ({ books, setBooks }: IProps) => {
           } else {
             toast.error(data.message);
           }
+          setIsLoading(false);
         })
         .catch((err) => console.log(err));
+    } else {
+      setIsLoading(false);
     }
   }, [setBooks, books]);
 
   const filterBooks = books.filter((book) =>
     book.titulo?.toLowerCase().includes(watch("search")?.toLowerCase())
   );
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <>
