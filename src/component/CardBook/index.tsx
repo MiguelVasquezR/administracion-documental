@@ -10,6 +10,13 @@ const CardBook = ({
   imagen,
   id,
 }: IBook) => {
+  const shotTitle = (title: string) => {
+    if (title.length > 20) {
+      return title.substring(0, 20) + "...";
+    }
+    return title;
+  };
+
   return (
     <Link
       href={`/biblioteca/${id}`}
@@ -27,12 +34,12 @@ const CardBook = ({
       <div className="w-[60%] h-[200px] px-2">
         <div>
           <label className="text-sm font-bold">Título: </label>
-          <p className="text-md">{titulo}</p>
+          <p className="text-md">{shotTitle(titulo)}</p>
         </div>
 
         <div>
           <label className="text-sm font-bold">Autor: </label>
-          <p className="text-md">{autor}</p>
+          <p className="text-md">{shotTitle(autor)}</p>
         </div>
 
         <div>
