@@ -13,6 +13,7 @@ import { connect } from "react-redux";
 import clsx from "clsx";
 import { setUsuario } from "@/redux/usuario";
 import Loading from "@/component/Loader/Loader";
+import Empty from "@/component/Empty/Empty";
 
 interface IProps {
   prestamos: IPrestamo[];
@@ -142,85 +143,89 @@ const Index = ({ prestamos, setPrestamos, user }: IProps) => {
         </button>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 p-5">
-        {prestamos.map((prestamo: IPrestamo, index: number) => {
-          return (
-            <div
-              key={index}
-              className={clsx(
-                "w-[350px] rounded-md shadow-md flex flex-row justify-center items-center gap-2 cursor-pointer",
-                prestamo.fechaDevolucion < new Date().toISOString()
-                  ? "bg-red-200"
-                  : "bg-white"
-              )}
-            >
-              <div className="w-[40%] h-full bg-primary/50 rounded-md">
-                <Image
-                  src={prestamo?.libro?.imagen}
-                  alt="libro"
-                  width={120}
-                  height={200}
-                  className="rounded-md w-full h-full object-fill"
-                />
+      {prestamos.length > 0 ? (
+        <div className="grid grid-cols-4 gap-4 p-5">
+          {prestamos.map((prestamo: IPrestamo, index: number) => {
+            return (
+              <div
+                key={index}
+                className={clsx(
+                  "w-[350px] rounded-md shadow-md flex flex-row justify-center items-center gap-2 cursor-pointer",
+                  prestamo.fechaDevolucion < new Date().toISOString()
+                    ? "bg-red-200"
+                    : "bg-white"
+                )}
+              >
+                <div className="w-[40%] h-full bg-primary/50 rounded-md">
+                  <Image
+                    src={prestamo?.libro?.imagen}
+                    alt="libro"
+                    width={120}
+                    height={200}
+                    className="rounded-md w-full h-full object-fill"
+                  />
+                </div>
+                <div className="w-[60%] px-2">
+                  <div>
+                    <label className="text-sm font-bold">Estudiante: </label>
+                    <p className="text-md">{prestamo?.estudiante?.nombre}</p>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-bold">Libro: </label>
+                    <p className="text-md">{prestamo?.libro?.titulo}</p>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-bold">
+                      Fecha de Prestamo:{" "}
+                    </label>
+                    <p className="text-md">{prestamo?.fechaPrestamo}</p>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-bold">
+                      Fecha de Devolución:{" "}
+                    </label>
+                    <p className="text-md">{prestamo?.fechaDevolucion}</p>
+                  </div>
+                  <div className="flex flex-row justify-end p-2 gap-2">
+                    {prestamo.fechaDevolucion < new Date().toISOString() && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          sendEmail(prestamo);
+                        }}
+                        className="bg-primary text-white px-2 py-2 rounded-md text-[12px]"
+                      >
+                        Solicitar Devolución
+                      </button>
+                    )}
+
+                    {prestamo?.estado === "Entregado" ? (
+                      <p className="text-md">Entregado</p>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleEntregar(prestamo);
+                        }}
+                        className="bg-primary text-white px-2 py-2 rounded-md text-[12px]"
+                      >
+                        {prestamo?.estado === "Entregado"
+                          ? "Entregado"
+                          : "Entregar"}
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
-              <div className="w-[60%] px-2">
-                <div>
-                  <label className="text-sm font-bold">Estudiante: </label>
-                  <p className="text-md">{prestamo?.estudiante?.nombre}</p>
-                </div>
-
-                <div>
-                  <label className="text-sm font-bold">Libro: </label>
-                  <p className="text-md">{prestamo?.libro?.titulo}</p>
-                </div>
-
-                <div>
-                  <label className="text-sm font-bold">
-                    Fecha de Prestamo:{" "}
-                  </label>
-                  <p className="text-md">{prestamo?.fechaPrestamo}</p>
-                </div>
-
-                <div>
-                  <label className="text-sm font-bold">
-                    Fecha de Devolución:{" "}
-                  </label>
-                  <p className="text-md">{prestamo?.fechaDevolucion}</p>
-                </div>
-                <div className="flex flex-row justify-end p-2 gap-2">
-                  {prestamo.fechaDevolucion < new Date().toISOString() && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        sendEmail(prestamo);
-                      }}
-                      className="bg-primary text-white px-2 py-2 rounded-md text-[12px]"
-                    >
-                      Solicitar Devolución
-                    </button>
-                  )}
-
-                  {prestamo?.estado === "Entregado" ? (
-                    <p className="text-md">Entregado</p>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        handleEntregar(prestamo);
-                      }}
-                      className="bg-primary text-white px-2 py-2 rounded-md text-[12px]"
-                    >
-                      {prestamo?.estado === "Entregado"
-                        ? "Entregado"
-                        : "Entregar"}
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      ) : (
+        <Empty />
+      )}
 
       {openModal && (
         <ModalPrestamo

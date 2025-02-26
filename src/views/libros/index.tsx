@@ -13,6 +13,7 @@ import { MdModeEditOutline } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { connect } from "react-redux";
 import Loading from "@/component/Loader/Loader";
+import Empty from "@/component/Empty/Empty";
 
 interface IProps {
   books: IBook[];
@@ -94,81 +95,88 @@ const Index = ({ books, setBooks }: IProps) => {
         <h2 className="text-2xl font-bold">Libros</h2>
         <LinkButton href="/libros/agregar" text="Agregar Libro" />
       </div>
-      <div className="grid grid-cols-2 p-5">
-        <div className="col-span-1">
-          <div className="flex flex-row justify-between items-center">
-            <p className="text-lg font-bold">Todos los libros</p>
+
+      {books.length > 0 ? (
+        <div className="grid grid-cols-2 p-5">
+          <div className="col-span-1">
             <div className="flex flex-row justify-between items-center">
-              <MdModeEditOutline
-                size={28}
-                className="cursor-pointer"
-                color={!librosSeleccionados ? "gray" : "black"}
-                onClick={() =>
-                  router.push(`/libros/editar/${librosSeleccionados?.id}`)
-                }
-              />
-              <MdDelete
-                size={28}
-                className="cursor-pointer"
-                color={!librosSeleccionados ? "gray" : "black"}
-                onClick={handleDelete}
-              />
+              <p className="text-lg font-bold">Todos los libros</p>
+              <div className="flex flex-row justify-between items-center">
+                <MdModeEditOutline
+                  size={28}
+                  className="cursor-pointer"
+                  color={!librosSeleccionados ? "gray" : "black"}
+                  onClick={() =>
+                    router.push(`/libros/editar/${librosSeleccionados?.id}`)
+                  }
+                />
+                <MdDelete
+                  size={28}
+                  className="cursor-pointer"
+                  color={!librosSeleccionados ? "gray" : "black"}
+                  onClick={handleDelete}
+                />
+              </div>
             </div>
+
+            <br />
+            <table className="table-auto border-collapse border border-gray-400 w-full max-h-[700px] overflow-auto">
+              <thead>
+                <tr>
+                  <th className="border border-gray-400 px-4 py-2">Titulo</th>
+                  <th className="border border-gray-400 px-4 py-2">Autor</th>
+                  <th className="border border-gray-400 px-4 py-2">Año</th>
+                  <th className="border border-gray-400 px-4 py-2">
+                    Editorial
+                  </th>
+                  <th className="border border-gray-400 px-4 py-2">Tipo</th>
+                  <th className="border border-gray-400 px-4 py-2">
+                    Número de páginas
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="text-center">
+                {books.map((libro: IBook) => (
+                  <tr
+                    key={libro.id}
+                    onClick={() => setLibrosSeleccionados(libro)}
+                    className={clsx(
+                      "cursor-pointer",
+                      libro.id === librosSeleccionados?.id &&
+                        "bg-primary/80 text-white"
+                    )}
+                  >
+                    <td className="border border-gray-400 px-4 py-2">
+                      {libro.titulo}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {libro.autor}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {libro.anioPublicacion}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {libro.editorial}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {libro.tipo}
+                    </td>
+                    <td className="border border-gray-400 px-4 py-2">
+                      {libro.numPag}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
-          <br />
-          <table className="table-auto border-collapse border border-gray-400 w-full max-h-[700px] overflow-auto">
-            <thead>
-              <tr>
-                <th className="border border-gray-400 px-4 py-2">Titulo</th>
-                <th className="border border-gray-400 px-4 py-2">Autor</th>
-                <th className="border border-gray-400 px-4 py-2">Año</th>
-                <th className="border border-gray-400 px-4 py-2">Editorial</th>
-                <th className="border border-gray-400 px-4 py-2">Tipo</th>
-                <th className="border border-gray-400 px-4 py-2">
-                  Número de páginas
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-center">
-              {books.map((libro: IBook) => (
-                <tr
-                  key={libro.id}
-                  onClick={() => setLibrosSeleccionados(libro)}
-                  className={clsx(
-                    "cursor-pointer",
-                    libro.id === librosSeleccionados?.id &&
-                      "bg-primary/80 text-white"
-                  )}
-                >
-                  <td className="border border-gray-400 px-4 py-2">
-                    {libro.titulo}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    {libro.autor}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    {libro.anioPublicacion}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    {libro.editorial}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    {libro.tipo}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2">
-                    {libro.numPag}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="col-span-1">
+            <h2 className="text-2xl font-bold"></h2>
+          </div>
         </div>
-
-        <div className="col-span-1">
-          <h2 className="text-2xl font-bold"></h2>
-        </div>
-      </div>
+      ) : (
+        <Empty />
+      )}
     </>
   );
 };

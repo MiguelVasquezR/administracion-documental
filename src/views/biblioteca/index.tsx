@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { connect } from "react-redux";
 import Loading from "@/component/Loader/Loader";
+import Empty from "@/component/Empty/Empty";
 
 interface IProps {
   books: IBook[];
@@ -63,12 +64,17 @@ const Index = ({ books, setBooks }: IProps) => {
           />
         </div>
       </div>
-
-      <div className="grid items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 p-5 w-full">
-        {filterBooks?.map((book: IBook, index: number) => (
-          <CardBook key={index} {...book} />
-        ))}
-      </div>
+      {filterBooks.length > 0 ? (
+        <>
+          <div className="grid items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 p-5 w-full">
+            {filterBooks?.map((book: IBook, index: number) => (
+              <CardBook key={index} {...book} />
+            ))}
+          </div>
+        </>
+      ) : (
+        <Empty />
+      )}
     </>
   );
 };

@@ -11,6 +11,7 @@ import { setMovies } from "@/redux/movies";
 import { Dispatch } from "@reduxjs/toolkit";
 import { IGlobal } from "@/interfaces/globalState";
 import Loading from "@/component/Loader/Loader";
+import Empty from "@/component/Empty/Empty";
 
 interface IIndexProps {
   movies: IMovie[];
@@ -63,12 +64,17 @@ const Index = ({ movies: peliculas, setPeliculas }: IIndexProps) => {
           />
         </div>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-5">
-        {filterMovies.map((pelicula: IMovie) => (
-          <CardMovie key={pelicula.id} {...pelicula} />
-        ))}
-      </div>
+      {filterMovies.length > 0 ? (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-5">
+            {filterMovies.map((pelicula: IMovie) => (
+              <CardMovie key={pelicula.id} {...pelicula} />
+            ))}
+          </div>
+        </>
+      ) : (
+        <Empty />
+      )}
     </>
   );
 };
