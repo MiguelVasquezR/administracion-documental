@@ -54,7 +54,7 @@ const Index = ({ books }: { books: IBook[] }) => {
         }}
       />
 
-      <div className=" shadow-md rounded-md p-5 flex justify-center flex-col gap-4">
+      <div className="mt-9 shadow-md rounded-md p-5 flex justify-center flex-col gap-4">
         <picture className="flex justify-center items-center">
           <Image
             width={200}
@@ -65,7 +65,9 @@ const Index = ({ books }: { books: IBook[] }) => {
           />
         </picture>
         <article className="text-center">
-          <h1 className="text-2xl font-bold">{book?.titulo}</h1>
+          <h1 className="text-2xl  flex justify-center items-center   font-bold">
+            <strong className="max-w-[300px]">{book?.titulo}</strong>
+          </h1>
           <p className="text-lg">Año: {book?.anioPublicacion}</p>
           <p className="text-lg">Autor: {book?.autor}</p>
           <p className="text-lg">Editorial: {book?.editorial}</p>
