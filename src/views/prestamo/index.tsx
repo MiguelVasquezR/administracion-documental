@@ -26,8 +26,10 @@ const Index = ({
     handleSubmit,
     watch,
     formState: { errors },
+    reset,
   } = useForm();
   const [openModalStudent, setOpenModalStudent] = useState(false);
+  const [observerStudent, setObserverStudent] = useState(false);
 
   const [students, setStudents] = useState<IStudent[]>([]);
   const [books, setBooks] = useState<IBook[]>([]);
@@ -42,23 +44,65 @@ const Index = ({
     }
   }, []);
 
-  const onSubmit = (data: FieldValues) => {
-    fetch("/api/estudiantes", {
-      method: "POST",
-      body: JSON.stringify(data),
-    })
+  const onSubmit = async (data: FieldValues) => {
+    if (!data.nombre || !data.matricula || !data.correo) {
+      toast.error("Todos los campos son requeridos");
+      return;
+    }
+
+    const matriculaRegex = /^S\d{8}$/i;
+    const correoRegex = /^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/;
+
+    if (!matriculaRegex.test(data.matricula)) {
+      toast.error("La matrícula debe empezar con 'S' y contener 8 dígitos.");
+      return;
+    }
+
+    if (!correoRegex.test(data.correo)) {
+      toast.error("El correo no es válido");
+      return;
+    }
+
+    if (students.some((student) => student.matricula === data.matricula)) {
+      toast.error("La matrícula ya ha sido registrada");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/estudiantes", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const result = await response.json();
+
+      if (result.status === 200) {
+        reset();
+        setObserverStudent(true);
+        setOpenModalStudent(false);
+        toast.success("Estudiante guardado correctamente");
+      } else {
+        toast.error(result.message);
+      }
+    } catch (err) {
+      toast.error("Ocurrió un error, inténtelo más tarde");
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetch("/api/estudiantes")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === 200) {
-          setOpenModalStudent(false);
+          setStudents(data.data);
         } else {
           toast.error(data.message);
         }
       })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+      .catch((err) => console.log(err));
+  }, [observerStudent]);
 
   useEffect(() => {
     fetch("/api/estudiantes")
@@ -133,14 +177,14 @@ const Index = ({
 
   return (
     <div
-      className={`w-screen h-screen bg-black/30 absolute top-0 left-0 ${
+      className={`w-full h-full bg-black/30 absolute top-0 left-0 z-50 ${
         openModal
           ? "animate-fade-up"
           : "animate-jump-out animate-once animate-duration-1000"
       }`}
     >
       {openModalStudent ? (
-        <div className="w-full h-full flex justify-center items-center">
+        <div className="w-screen h-screen flex justify-center items-center">
           <form
             className="rounded-md p-5 shadow-md w-[50%] h-[50%] bg-white relative flex flex-col gap-5 "
             onSubmit={handleSubmit(onSubmit)}
@@ -195,7 +239,7 @@ const Index = ({
           </form>
         </div>
       ) : (
-        <div className="w-full h-full flex justify-center items-center">
+        <div className="w-screen h-full flex justify-center items-center">
           <form
             onSubmit={onSubmitPrestamo}
             className="rounded-md p-5 shadow-md w-[50%] h-[50%] bg-white relative flex flex-row gap-5 "
@@ -267,7 +311,6 @@ const Index = ({
             </div>
             <div className="h-full bg-white w-1/2">
               <p className="text-2xl font-bold">Información de Prestamo</p>
-
               <div>
                 <p className="font-bold text-xl">Información del libro</p>
                 <p>Titulo: {selectedBook?.titulo}</p>
@@ -275,6 +318,7 @@ const Index = ({
                 <p>Año: {selectedBook?.anioPublicacion}</p>
                 <p>Editorial: {selectedBook?.editorial}</p>
               </div>
+              <br />
 
               <div>
                 <p className="font-bold text-xl">Información del alumno</p>
@@ -282,6 +326,7 @@ const Index = ({
                 <p>Matricula: {selectedStudent?.matricula}</p>
                 <p>Correo: {selectedStudent?.correo}</p>
               </div>
+              <br />
 
               <div>
                 <p className="font-bold text-xl">Información del prestamo</p>

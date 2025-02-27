@@ -49,7 +49,7 @@ const CardBook = ({
 
         <div>
           <label className="text-sm font-bold">Editorial: </label>
-          <p className="text-md">{editorial}</p>
+          <p className="text-md">{shotTitle(editorial)}</p>
         </div>
       </div>
     </Link>
