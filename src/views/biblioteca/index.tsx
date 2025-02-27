@@ -39,7 +39,7 @@ const Index = ({ books, setBooks }: IProps) => {
     } else {
       setIsLoading(false);
     }
-  }, [setBooks, books]);
+  }, []);
 
   const filterBooks = books.filter((book) =>
     book.titulo?.toLowerCase().includes(watch("search")?.toLowerCase())

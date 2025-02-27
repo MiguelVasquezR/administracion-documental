@@ -17,7 +17,7 @@ const Figure = () => {
       {/* <!-- From Uiverse.io by elijahgummer -->  */}
       <div className="main-dog">
         <div className="dog">
-          <div className="dog__paws">
+          {/* <div className="dog__paws">
             <div className="dog__bl-leg leg">
               <div className="dog__bl-paw paw"></div>
               <div className="dog__bl-top top"></div>
@@ -30,7 +30,7 @@ const Figure = () => {
               <div className="dog__fr-paw paw"></div>
               <div className="dog__fr-top top"></div>
             </div>
-          </div>
+          </div> */}
 
           <div className="dog__body">
             <div className="dog__tail"></div>

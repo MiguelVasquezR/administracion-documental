@@ -43,7 +43,7 @@ const Index = ({ movies: peliculas, setPeliculas }: IIndexProps) => {
     } else {
       setIsLoading(false);
     }
-  }, [peliculas, setPeliculas]);
+  }, []);
 
   if (isLoading) {
     return <Loading />;
