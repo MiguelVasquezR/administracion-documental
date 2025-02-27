@@ -9,6 +9,7 @@ export interface IBook {
   tipo: string;
   imagen: string;
   numPag: string;
+  cantidad?: number;
   ubicacion: {
     col?: number;
     row?: number;

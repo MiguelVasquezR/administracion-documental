@@ -16,4 +16,5 @@ export const BookValidator = yup.object().shape({
   }),
   tipo: yup.string().required("Debes ingresar un tipo de libro"),
   descripcion: yup.string().required("Debes ingresar una descripción"),
+  cantidad: yup.number().required("Debes ingresar una cantidad"),
 });

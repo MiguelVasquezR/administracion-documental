@@ -72,6 +72,9 @@ const Index = ({ books }: { books: IBook[] }) => {
           <p className="text-lg">Autor: {book?.autor}</p>
           <p className="text-lg">Editorial: {book?.editorial}</p>
           <p className="text-lg">No. Páginas: {book?.numPag}</p>
+          {book?.cantidad && (
+            <p className="text-lg">Cantidad: {book?.cantidad}</p>
+          )}
         </article>
       </div>
 

@@ -206,6 +206,17 @@ const AgregarTexto = ({ setBooks }: IAgregarTextoProps) => {
             {...register("tipo")}
           />
 
+          <TextField
+            label="N° Ejemplares"
+            errors={!!errors.cantidad}
+            placeholder="Número de Ejemplares"
+            value={watch("cantidad")?.toString()}
+            type={"text"}
+            isLabel={false}
+            message={errors?.cantidad?.message}
+            {...register("cantidad")}
+          />
+
           <div className="w-full">
             <textarea
               {...register("descripcion")}
